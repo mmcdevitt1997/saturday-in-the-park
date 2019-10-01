@@ -5,7 +5,7 @@ import Attractions from "./Attractions"
 import useSimpleAuth from "../../hooks/ui/useSimpleAuth"
 
 const ParkExplorer = props => {
-    const [areas, setAreas] = useState(['1'])
+    const [areas, setAreas] = useState([])
     const [attractions, setAttractions] = useState([])
     const { isAuthenticated } = useSimpleAuth()
 
@@ -23,7 +23,7 @@ const ParkExplorer = props => {
         }
     }
 
-    useEffect(() => {
+    const getParkAreas = () => {
         if (isAuthenticated()) {
             fetch('http://localhost:8000/parkareas', {
                 "method": "GET",
@@ -34,13 +34,14 @@ const ParkExplorer = props => {
                 .then(response => response.json())
                 .then(setAreas)
         }
-    }, [])
+    }
+    useEffect(getParkAreas,[])
 
     return (
         <>
             <main className="explorer">
                 <AreaList areas={areas} getAttractions={getAttractions} />
-                <Attractions attractions={attractions} />
+                <Attractions attractions={attractions} {...props}/>
             </main>
         </>
     )
